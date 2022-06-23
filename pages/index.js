@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function Home() {
   const [bills, setBills] = useState();
@@ -10,20 +12,41 @@ export default function Home() {
       setBills(results);
     })();
   }, []);
+  const router = useRouter();
+  const onClick = (id) => {
+    router.push(
+      {
+        pathname: `/person/${id}`,
+      },
+      `/person/${id}`
+    );
+  };
   return (
     <div className="Hi">
       <div className="main">
         {!bills && <h4>Loading...</h4>}
         {bills?.map((bill) => (
-          <div key={bill.id}>
+          <div key={bill.id} onClick={() => onClick(bill.id)}>
             <img src={bill.squareImage} alt="..." />
             <div>
               <div>
-                <span>{bill.name}</span>
+                <Link
+                  href={{
+                    pathname: `/person/${bill.id}`,
+                  }}
+                  as={`/person/${bill.id}`}
+                >
+                  <a>{bill.name}</a>
+                </Link>
               </div>
               <div>
                 <span>
-                  {bill.netWorth} / {bill.industries[0]}
+                  {String(bill.netWorth).split(".")[0].length == 6
+                    ? String(bill.netWorth).split(".")[0].slice(0, 3)
+                    : String(bill.netWorth).split(".")[0].length == 5
+                    ? String(bill.netWorth).split(".")[0].slice(0, 2)
+                    : String(bill.netWorth).split(".")[0].slice(0, 1)}{" "}
+                  Billion {bill.industries[0]}
                 </span>
               </div>
             </div>
@@ -38,6 +61,11 @@ export default function Home() {
         img:hover {
           transform: scale(1.2);
         }
+        a {
+          text-decoration: none;
+          color: white;
+        }
+
         .main {
           padding: 2% 3%;
           display: grid;
