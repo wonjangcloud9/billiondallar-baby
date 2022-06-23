@@ -33,6 +33,10 @@ export default function Home() {
       <style jsx>{`
         img {
           width: 100px;
+          transition: transform 1s ease-out 100ms;
+        }
+        img:hover {
+          transform: scale(1.2);
         }
         .main {
           padding: 2% 3%;
